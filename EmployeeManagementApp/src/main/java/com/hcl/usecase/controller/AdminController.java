@@ -3,6 +3,7 @@ package com.hcl.usecase.controller;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -51,14 +52,10 @@ public class AdminController {
 		return ResponseEntity.ok(employeeService.getEmployeesWithXp());
 	}
 	
-	@GetMapping("/employee/managers")
-	public ResponseEntity<List<Employee>> getManagers(){
-		return ResponseEntity.ok(employeeService.getManagers());
-	}
 	
-	@GetMapping("/employee/regulars")
-	public ResponseEntity<List<Employee>> getRegulars(){
-		return ResponseEntity.ok(employeeService.getNonManagers());
+	@GetMapping("/employee/categorized")
+	public ResponseEntity<Map<Boolean, List<Employee>>> getEmployeesCategorized(){
+		return ResponseEntity.ok(employeeService.getEmployeesCategorized());
 	}
 	
 	@PostMapping("/day/working")

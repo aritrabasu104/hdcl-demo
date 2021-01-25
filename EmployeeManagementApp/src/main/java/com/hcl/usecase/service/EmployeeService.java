@@ -2,6 +2,7 @@ package com.hcl.usecase.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -16,9 +17,7 @@ public interface EmployeeService {
 
 	List<Employee> getEmployeesWithXp();
 	
-	List<Employee> getManagers();
-	
-	List<Employee> getNonManagers();
+	Map<Boolean, List<Employee>> getEmployeesCategorized();
 
 	List<LocalDate> getWorkingDays(List<LocalDate> holidays);
 }

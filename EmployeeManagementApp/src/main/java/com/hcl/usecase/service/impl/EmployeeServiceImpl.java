@@ -3,6 +3,7 @@ package com.hcl.usecase.service.impl;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,15 +48,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 			 	.sorted((emp1,emp2)->emp1.getJoiningDate().compareTo(emp2.getJoiningDate())).collect(Collectors.toList());
 	}
 	@Override
-	public List<Employee> getManagers() {
-		return StreamSupport.stream(employeeRepository.findAll().spliterator(),false)
-				.filter(Employee::getIsManager).collect(Collectors.toList());
+	public Map<Boolean, List<Employee>> getEmployeesCategorized() {
+		Map<Boolean, List<Employee>> map = StreamSupport.stream(employeeRepository.findAll().spliterator(),false)
+				.collect(Collectors.partitioningBy(item->item.getIsManager()));
+		return map;
 	}
-	@Override
-	public List<Employee> getNonManagers() {
-		return StreamSupport.stream(employeeRepository.findAll().spliterator(),false)
-				.filter(Predicate.not(Employee::getIsManager)).collect(Collectors.toList());
-	}
+	
 	@Override
 	public List<LocalDate> getWorkingDays(List<LocalDate> holidays) {
 		Predicate<LocalDate> isHoliday = item ->  holidays.contains(item);
