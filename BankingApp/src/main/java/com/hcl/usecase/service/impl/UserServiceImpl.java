@@ -11,8 +11,8 @@ import com.hcl.usecase.error.custom.InsufficientBalanceException;
 import com.hcl.usecase.error.custom.SameAccountException;
 import com.hcl.usecase.model.Account;
 import com.hcl.usecase.model.BalanceDetail;
-import com.hcl.usecase.model.Transaction;
-import com.hcl.usecase.model.Transaction.TransactionType;
+import com.hcl.usecase.model.BankTransaction;
+import com.hcl.usecase.model.BankTransaction.TransactionType;
 import com.hcl.usecase.repository.AccountRepository;
 import com.hcl.usecase.repository.BalanceDetailRepository;
 import com.hcl.usecase.repository.TransactionRepository;
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 		if(fromAccount.getAccountId().equals(toAccount.getAccountId()))
 			throw new SameAccountException(fromAccount);
 		else if(fromAccount.getBalanceDetail().getBalance() < amount)
-			throw new InsufficientBalanceException(fromAccount);
+			throw new InsufficientBalanceException(fromAccount.getAccountId());
 		
 		BalanceDetail fromAccountBalanceDetail = fromAccount.getBalanceDetail();
 		BalanceDetail toAccountBalanceDetail = toAccount.getBalanceDetail();
@@ -56,14 +56,14 @@ public class UserServiceImpl implements UserService {
 	private void saveTransactionInfo(BalanceDetail fromAccountBalanceDetail,BalanceDetail toAccountBalanceDetail, Double amount) {
 		Date date = new Date();
 		
-		Transaction debit = new Transaction();
+		BankTransaction debit = new BankTransaction();
 		debit.setAmount(amount);
 		debit.setTransactionType(TransactionType.DEBIT);
 		debit.setDate(date);
 		debit.setBalanceDetail(fromAccountBalanceDetail);
 		transactionRepository.save(debit);
 		
-		Transaction credit = new Transaction();
+		BankTransaction credit = new BankTransaction();
 		credit.setAmount(amount);
 		credit.setTransactionType(TransactionType.CREDIT);
 		credit.setDate(date);
@@ -72,11 +72,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<Transaction> generateStatement(Date fromDate, Date toDate, Account account) {
+	public List<BankTransaction> generateStatement(Date fromDate, Date toDate, Account account) {
 		account = accountRepository.findById(account.getAccountId()).get();
 		return account.getBalanceDetail().getTransactions().stream().filter(item->{
 			return item.getDate().after(fromDate) && item.getDate().before(toDate);
 		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public Account getAccountDetail(Long accNo) {
+		return accountRepository.findById(accNo).get();
 	}
 	
 

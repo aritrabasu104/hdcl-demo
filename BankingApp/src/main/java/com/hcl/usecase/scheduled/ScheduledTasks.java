@@ -14,6 +14,6 @@ public class ScheduledTasks {
 	
 	@Scheduled(cron = "0 */2 * * * *")
 	public void activateAccounts() {
-		adminService.activateAccounts();
+//		adminService.activateAccounts();
 	}
 }

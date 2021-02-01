@@ -23,7 +23,7 @@ import com.hcl.usecase.dto.CustomerRegistrationRequestDto;
 import com.hcl.usecase.dto.CustomerRegistrationResponseDto;
 import com.hcl.usecase.model.Account;
 import com.hcl.usecase.model.BalanceDetail;
-import com.hcl.usecase.model.Customer;
+import com.hcl.usecase.model.BankCustomer;
 import com.hcl.usecase.service.AdminService;
 
 @RestController
@@ -47,7 +47,7 @@ public class AdminController {
 	@PostMapping("/customer")
 	public ResponseEntity<CustomerRegistrationResponseDto> register(@Valid @RequestBody CustomerRegistrationRequestDto 
 			customerRegistrationRequestDto){
-		Customer customer = modelMapper.map(customerRegistrationRequestDto, Customer.class);
+		BankCustomer customer = modelMapper.map(customerRegistrationRequestDto, BankCustomer.class);
 		return ResponseEntity.ok(modelMapper.map(adminService.register(customer), CustomerRegistrationResponseDto.class));
 	}
 	

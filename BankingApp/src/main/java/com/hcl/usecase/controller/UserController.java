@@ -11,19 +11,23 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hcl.usecase.dto.AccountResponseDto;
 import com.hcl.usecase.dto.StatementDto;
 import com.hcl.usecase.dto.TransactionWithIdDto;
 import com.hcl.usecase.dto.TransferRequestDto;
 import com.hcl.usecase.error.custom.InsufficientBalanceException;
 import com.hcl.usecase.error.custom.SameAccountException;
 import com.hcl.usecase.model.Account;
-import com.hcl.usecase.model.Transaction;
+import com.hcl.usecase.model.BankTransaction;
 import com.hcl.usecase.service.UserService;
+import com.sun.istack.NotNull;
 
 @RestController
 @Validated
@@ -36,8 +40,14 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@GetMapping("/balance")
+	public ResponseEntity<AccountResponseDto> getBalance(@RequestParam @NotNull Long accNo){
+		return ResponseEntity.status(200)
+				.body(modelMapper.map(userService.getAccountDetail(accNo), AccountResponseDto.class));
+	}
+	
 	@PostMapping("/transfer")
-	public ResponseEntity<?> register(@Valid @RequestBody TransferRequestDto transferRequestDto)
+	public ResponseEntity<?> transfer(@Valid @RequestBody TransferRequestDto transferRequestDto)
 			throws InsufficientBalanceException, SameAccountException {
 		Account fromAccount = modelMapper.map(transferRequestDto.getFromAccount(), Account.class);
 		Account toAccount = modelMapper.map(transferRequestDto.getToAccount(), Account.class);
@@ -55,7 +65,7 @@ public class UserController {
 		calendar.set(statementDto.getToYear(), statementDto.getToMonth().getNumber() - 1, 1);
 		Date toDate = calendar.getTime();
 
-		List<Transaction> transactions = userService.generateStatement(fromDate, toDate, account);
+		List<BankTransaction> transactions = userService.generateStatement(fromDate, toDate, account);
 		return ResponseEntity.ok(transactions.stream().map(item -> modelMapper.map(item, TransactionWithIdDto.class))
 				.collect(Collectors.toList()));
 	}

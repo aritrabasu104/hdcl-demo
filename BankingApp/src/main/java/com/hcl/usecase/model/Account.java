@@ -30,7 +30,7 @@ public class Account {
 	private AccountStatus accountStatus = AccountStatus.PENDING_VERIFICATION;
 	
 	@ManyToOne
-	private Customer customer;
+	private BankCustomer customer;
 	
 	@OneToOne(mappedBy = "account")
 	private BalanceDetail balanceDetail;

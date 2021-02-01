@@ -1,7 +1,6 @@
 package com.hcl.usecase.model;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +21,7 @@ public class BalanceDetail {
 	@Id
 	@GeneratedValue
 	@EqualsAndHashCode.Include
-	private UUID Id;
+	private Long Id;
 	
 	private Double balance;
 	
@@ -30,6 +29,6 @@ public class BalanceDetail {
 	private Account account;
 	
 	@OneToMany(mappedBy = "balanceDetail")
-	private List<Transaction> transactions;
+	private List<BankTransaction> transactions;
 	
 }

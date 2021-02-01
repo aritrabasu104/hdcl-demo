@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.hcl.usecase.model.Account;
 import com.hcl.usecase.model.Account.AccountStatus;
 import com.hcl.usecase.model.BalanceDetail;
-import com.hcl.usecase.model.Customer;
+import com.hcl.usecase.model.BankCustomer;
 import com.hcl.usecase.repository.AccountRepository;
 import com.hcl.usecase.repository.BalanceDetailRepository;
 import com.hcl.usecase.repository.CustomerRepository;
@@ -29,33 +29,40 @@ public class AdminServiceImpl implements AdminService {
 	private BalanceDetailRepository balanceDetailRepository;
 	
 	@Override
-	public Customer register(Customer customer) {
+	public BankCustomer register(BankCustomer customer) {
 		return customerRepository.save(customer);
 	}
 
 	@Override
 	public Account addAccount(Account account) {
+		account = accountRepository.save(account);
+		BalanceDetail balanceDetail = new BalanceDetail();
+		balanceDetail.setAccount(account);
+		balanceDetail.setBalance(0d);
+		balanceDetail = balanceDetailRepository.save(balanceDetail);
+		account.setBalanceDetail(balanceDetail);
+		account.setAccountStatus(AccountStatus.ACTIVE);	
 		return accountRepository.save(account);
 	}
 
-	@Override
-	public void activateAccounts() {
-		List<Account> accounts = accountRepository.findAllByAccountStatus(AccountStatus.PENDING_VERIFICATION)
-				.stream().map(account -> {
-					BalanceDetail balanceDetail = new BalanceDetail();
-					balanceDetail.setAccount(account);
-					balanceDetail.setBalance(0d);
-					balanceDetail = balanceDetailRepository.save(balanceDetail);
-					account.setBalanceDetail(balanceDetail);
-					account.setAccountStatus(AccountStatus.ACTIVE);	
-					return account;
-				}).collect(Collectors.toList());
-		accountRepository.saveAll(accounts);
-	}
+//	@Override
+//	public void activateAccounts() {
+//		List<Account> accounts = accountRepository.findAllByAccountStatus(AccountStatus.PENDING_VERIFICATION)
+//				.stream().map(account -> {
+//					BalanceDetail balanceDetail = new BalanceDetail();
+//					balanceDetail.setAccount(account);
+//					balanceDetail.setBalance(0d);
+//					balanceDetail = balanceDetailRepository.save(balanceDetail);
+//					account.setBalanceDetail(balanceDetail);
+//					account.setAccountStatus(AccountStatus.ACTIVE);	
+//					return account;
+//				}).collect(Collectors.toList());
+//		accountRepository.saveAll(accounts);
+//	}
 
 	@Override
-	public List<Customer> getCustomers() {
-		List<Customer> result = new ArrayList<>();
+	public List<BankCustomer> getCustomers() {
+		List<BankCustomer> result = new ArrayList<>();
 		customerRepository.findAll().forEach(result::add);
 		return result;
 	}

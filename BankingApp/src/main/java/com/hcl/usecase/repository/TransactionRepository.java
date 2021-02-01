@@ -1,11 +1,9 @@
 package com.hcl.usecase.repository;
 
-import java.util.UUID;
-
 import org.springframework.data.repository.CrudRepository;
 
-import com.hcl.usecase.model.Transaction;
+import com.hcl.usecase.model.BankTransaction;
 
-public interface TransactionRepository extends CrudRepository<Transaction, UUID> {
+public interface TransactionRepository extends CrudRepository<BankTransaction, Long> {
 
 }

@@ -1,7 +1,6 @@
 package com.hcl.usecase.model;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,12 +25,12 @@ import lombok.ToString;
 @Entity
 @Getter @Setter @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Customer {
+public class BankCustomer {
 	
 	@Id
 	@GeneratedValue
 	@EqualsAndHashCode.Include
-	private UUID Id;
+	private Long Id;
 	
 	@NotBlank
 	private String fname;

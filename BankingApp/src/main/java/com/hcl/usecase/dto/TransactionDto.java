@@ -4,7 +4,7 @@ import java.util.Date;
 
 import javax.validation.constraints.Min;
 
-import com.hcl.usecase.model.Transaction.TransactionType;
+import com.hcl.usecase.model.BankTransaction.TransactionType;
 
 import lombok.Getter;
 import lombok.Setter;

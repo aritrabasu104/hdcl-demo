@@ -1,12 +1,12 @@
 package com.hcl.usecase.model;
 
-import java.util.Date;
-import java.util.UUID;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,23 +16,15 @@ import lombok.ToString;
 @Entity
 @Getter @Setter @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Transaction {
-
+public class User {
 	@Id
 	@GeneratedValue
 	@EqualsAndHashCode.Include
-	private UUID Id;
+	private Long id;
 	
-	@ManyToOne
-	private BalanceDetail balanceDetail;
+	@NotNull
+	private String name;
 	
-	private Double amount;
-	
-	private Date date;
-	
-	private TransactionType transactionType;
-	
-	public enum TransactionType{
-		CREDIT,DEBIT
-	}
+	@OneToMany(mappedBy = "user")
+	private List<FoodOrder> orders;
 }

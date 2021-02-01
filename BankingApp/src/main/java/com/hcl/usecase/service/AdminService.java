@@ -4,15 +4,15 @@ import java.util.List;
 
 import com.hcl.usecase.model.Account;
 import com.hcl.usecase.model.BalanceDetail;
-import com.hcl.usecase.model.Customer;
+import com.hcl.usecase.model.BankCustomer;
 
 public interface AdminService {
 
-	Customer register(Customer customer);
+	BankCustomer register(BankCustomer customer);
 	Account addAccount(Account account);
-	void activateAccounts();
+//	void activateAccounts();
 	
-	List<Customer> getCustomers();
+	List<BankCustomer> getCustomers();
 	List<Account> getAccounts();
 	BalanceDetail updateBalance(BalanceDetail balanceDetail);
 }
